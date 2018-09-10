@@ -1,0 +1,58 @@
+# [traefikLog]
+#   filePath = "/var/log/traefik/traefik.log"
+# [accessLog]
+#   filePath = "/var/log/traefik/access.log"
+
+defaultEntryPoints = ["http", "https"]
+InsecureSkipVerify = true
+
+[api]
+  entryPoint = "traefik"
+  dashboard = true
+
+# Entrypoints, http and https
+[entryPoints]
+
+# http should be redirected to https
+[entryPoints.http]
+address = ":80"
+[entryPoints.http.redirect]
+entryPoint = "https"
+
+# https is the default
+[entryPoints.https]
+address = ":443"
+[entryPoints.https.tls]
+
+# Enable ACME (Let's Encrypt): automatic SSL
+[acme]
+email = "maxence@maireaux.fr"
+storage = "/opt/traefik/acme.json" # or "traefik/acme/account" if using KV store
+entryPoint = "https"
+onDemand = false
+OnHostRule = true
+[acme.httpChallenge]
+entryPoint = "http"
+
+[file]
+watch = true
+[backends]
+{% for item in traefik_config %}
+  [backends.{{ item.name }}]
+    [backends.{{ item.name }}.servers.server1]
+    url = "{{ item.backend }}"
+    weight = 100
+{% endfor %}
+
+[frontends]
+{% for item in traefik_config %}
+  [frontends.{{ item.name }}]
+  backend = "{{ item.name }}"
+  passHostHeader = true
+    [frontends.{{ item.name }}.routes.all]
+    rule = "Host:{{ item.url }}"
+{% endfor %}
+
+# [docker]
+# endpoint = "unix:///var/run/docker.sock"
+# watch = true

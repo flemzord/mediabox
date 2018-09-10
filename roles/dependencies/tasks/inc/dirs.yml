@@ -1,0 +1,12 @@
+- name: Create common directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /home/{{user}}/logs
+    - /home/{{user}}/.config
+    - /mnt/local
+    - /mnt/unionfs
+    - /mnt/plexdrive
+    - /mnt/download/complete
+    - /mnt/download/incomplete
+    - /mnt/download/.session
+    - /opt/plexdrive

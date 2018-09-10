@@ -1,0 +1,12 @@
+---
+- include_tasks: inc/plex.yml
+- include_tasks: inc/activate_plex.yml
+  when: ci == "False"
+
+- include_tasks: inc/plexpy.yml
+  when: plexpy_install
+
+- include_tasks: inc/plexupdate.yml
+  when: plexupdate_install
+
+- include_tasks: inc/plex-plugins.yml

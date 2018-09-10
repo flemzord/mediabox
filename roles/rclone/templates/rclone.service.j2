@@ -1,0 +1,17 @@
+# /etc/systemd/system/rclone.service
+
+[Unit]
+Description=rclone Mount
+After=network-online.target
+
+[Service]
+Type=forking
+GuessMainPID=no
+User={{user}}
+Group={{user}}
+ExecStartPre=/bin/sleep 30
+ExecStart=/usr/bin/rclone mount --allow-non-empty --allow-other --max-read-ahead 2G --acd-upload-wait-per-gb=3m0s --acd-templink-threshold 9 --checkers 2 --transfers 2 --bwlimit 100M --timeout 10m0s --ignore-existing --no-check-certificate --retries 5 --stats 0 cloud: /mnt/plexdrive/
+ExecStop=/bin/fusermount -uz /mnt/plexdrive
+
+[Install]
+WantedBy=default.target

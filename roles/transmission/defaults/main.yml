@@ -1,0 +1,34 @@
+---
+transmission_user: "{{ user }}"
+transmission_group: "{{ user }}"
+transmission_password: youShouldChangeThisUnlessDisablingAuth
+transmission_url: '/transmission/'
+
+transmission_rpc_auth_enabled: false
+transmission_rpc_whitelist_enabled: false
+transmission_rpc_whitelist: 127.0.0.1
+transmission_rpc_auth_required: false
+transmission_rpc_host_whitelist_enabled: false
+transmission_rpc_host_whitelist: ""
+
+transmission_umask: 2
+
+transmission_download_dir: "/mnt/download/complete"
+transmission_incomplete_dir_enabled: true
+transmission_incomplete_dir: "//mnt/download/incomplete"
+transmission_watch_dir_enabled: false
+transmission_watch_dir: ""
+
+transmission_ratio_limit_enabled: false
+transmission_ratio_limit: 10
+
+transmission_speed_limit_up_enabled: false
+transmission_speed_limit_up: 100
+transmission_speed_limit_down_enabled: false
+transmission_speed_limit_down: 100
+
+transmission_blocklist_enabled: false
+transmission_blocklist_url: http://www.example.com/blocklist
+
+transmission_peer_port: 51413
+transmission_port_forwarding_enabled: false

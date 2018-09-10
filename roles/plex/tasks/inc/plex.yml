@@ -1,0 +1,49 @@
+---
+- block:
+    - name: Install apt-transport-https
+      apt:
+        name: apt-transport-https
+        state: present
+
+    - block:
+        - name: Add Plex apt key (Ubuntu & Debian with systemd)
+          apt_key:
+            url: https://downloads.plex.tv/plex-keys/PlexSign.key
+            state: present
+
+        - name: Add Plex apt repo (Ubuntu & Debian with systemd)
+          apt_repository:
+            repo: deb https://downloads.plex.tv/repo/deb/ public main
+            state: present
+          changed_when: false
+
+      when: (ansible_distribution == 'Ubuntu') or (ansible_distribution == 'Debian' and ansible_distribution_major_version|int >= 9)
+
+    - block:
+        - name: Add Plex Apt key (Debian sysVinit)
+          apt_key:
+            url: http://shell.ninthgate.se/packages/shell.ninthgate.se.gpg.key
+            state: present
+
+        - name: Add ninthgate apt repo (Debian sysVinit)
+          apt_repository:
+            repo: deb http://shell.ninthgate.se/packages/debian wheezy main
+            state: present
+          changed_when: false
+
+      when: ansible_distribution == 'Debian' and ansible_distribution_major_version|int <= 8
+
+    - name: Apt install Plex
+      apt:
+        name: plexmediaserver
+        state: present
+        update_cache: yes
+      notify: restart plex
+
+  when: ansible_os_family == "Debian"
+
+- name: Autostart Plex and start service
+  service:
+    name: plexmediaserver
+    enabled: yes
+  notify: restart plex

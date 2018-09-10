@@ -1,0 +1,33 @@
+---
+- name: Check if unionfs service exists
+  stat:
+    path: "/etc/systemd/system/unionfs.service"
+  register: unionfs_service
+
+- name: Populate Service Facts
+  service_facts:
+  when: unionfs_service.stat.exists
+
+- name: Get unionfs service state
+  set_fact:
+    unionfs_service_running: "{{ (services['unionfs.service']['state'] == \"running\") }}"
+  when: unionfs_service.stat.exists
+
+- name: Create /mnt/unionfs and subdirs
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
+  with_items:
+    - /mnt/unionfs
+    - /mnt/local/.unionfs-fuse
+
+- name: Install unionfs
+  apt:
+    name: unionfs-fuse
+    state: present
+
+- name: Import unionfs.service
+  template:
+    src: unionfs.service.j2
+    dest: /etc/systemd/system/unionfs.service
+
+- name: Start unionfs service
+  systemd: state=started name=unionfs daemon_reload=yes enabled=yes

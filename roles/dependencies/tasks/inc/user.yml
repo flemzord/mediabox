@@ -1,0 +1,27 @@
+---
+- name: Create common groups
+  group: "name={{item}} state=present"
+  with_items:
+    - docker
+    - "{{user}}"
+
+- name: "Create user {{user}}"
+  user:
+    name: "{{user}}"
+    group: "{{user}}"
+    groups: "{{user}},docker,sudo"
+    append: yes
+  register: user_info
+
+- name: Check sudoers exists
+  stat:
+    path: "/etc/sudoers"
+  register: sudoers
+
+- name: Set sudo group to NOPASSWD
+  lineinfile:
+    path: "/etc/sudoers"
+    regexp: '^%sudo\s'
+    line: '%sudo   ALL=(ALL) NOPASSWD:ALL'
+    state: present
+  when: sudoers.stat.exists == True

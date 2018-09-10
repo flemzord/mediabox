@@ -1,0 +1,12 @@
+---
+
+- name: sonarr_reload_systemd
+  command: systemctl daemon-reload
+  become: yes
+
+- name: restart_sonarr
+  service:
+    name: sonarr
+    state: restarted
+    enabled: yes
+  become: yes

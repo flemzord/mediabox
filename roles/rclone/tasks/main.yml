@@ -1,0 +1,48 @@
+---
+- name: Install unzip
+  package:
+    name: 'unzip'
+    state: latest
+  
+- name: "Download and unarchive rclone"
+  unarchive:
+    src: "https://downloads.rclone.org/rclone-current-linux-amd64.zip"
+    dest: /tmp
+    copy: no
+    validate_certs: no
+
+- name: Find rclone tmp dir
+  shell: ls -d /tmp/rclone-*-linux-amd64
+  register: rclone_tmp_dir
+
+- name: Copy binary to /usr/bin/rclone
+  copy:
+    src: "{{ rclone_tmp_dir.stdout }}/rclone"
+    dest: "/usr/bin/rclone"
+    mode: 0775
+    owner: root
+    group: root
+    force: yes
+    remote_src: true
+
+- name: Import rclone.service
+  template:
+    src: rclone.service.j2
+    dest: /etc/systemd/system/rclone.service
+    force: yes
+
+- name: Create rclone directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /home/{{user}}/.config/rclone
+
+- name: Add config
+  copy:
+    src: "rclone.conf"
+    dest: "/home/{{user}}/.config/rclone/rclone.conf"
+
+- name: Start rclone service
+  systemd: 
+    enabled: yes
+    name: rclone 
+    daemon_reload: yes 

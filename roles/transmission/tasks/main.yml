@@ -1,0 +1,71 @@
+---
+# Installation
+- name: Install Transmission
+  apt:
+    name: transmission-daemon
+    state: present
+
+# Configuration
+- name: Make sure transmission is not running
+  service:
+    name: transmission-daemon
+    state: stopped
+  ignore_errors: true
+
+- name: grep and register
+  shell: >
+    egrep "^{{ transmission_user }}:" /etc/passwd | awk -F: '{ printf $6 }'
+  changed_when: false
+  register: _user_home
+
+- name: Add config directory
+  file:
+    state: directory
+    path: "{{ _user_home.stdout }}/.config/transmission-daemon"
+    owner: "{{ transmission_user }}"
+    group: "{{ transmission_group }}"
+    mode: 0755
+
+- name: Copy Transmission configuration
+  template:
+    src: settings.json.j2
+    dest: "{{ _user_home.stdout }}/.config/transmission-daemon/settings.json"
+    owner: "{{ transmission_user }}"
+    group: "{{ transmission_group }}"
+
+- name: Add current user to transmission group
+  user:
+    name: "{{ transmission_user }}"
+    groups: "{{ transmission_group }}"
+    append: yes
+
+- name: "Create transmission-daemon overwrite systemd config directory"
+  file:
+    path: "/etc/systemd/system/transmission-daemon.service.d"
+    state: directory
+    mode: 0755
+
+- name: "Change transmission-daemon systemd user"
+  ini_file:
+    path: /etc/systemd/system/transmission-daemon.service.d/user.conf
+    section: Service
+    option: User
+    value: "{{ transmission_user }}"
+  notify: reload systemd
+
+- name: "Change transmission-daemon systemd timer group"
+  ini_file:
+    path: /etc/systemd/system/transmission-daemon.service.d/group.conf
+    section: Service
+    option: Group
+    value: "{{ transmission_group }}"
+  notify: reload systemd
+
+- meta: flush_handlers
+
+# Service start
+- name: Start transmission
+  service:
+    name: transmission-daemon
+    state: started
+  ignore_errors: true

@@ -1,0 +1,17 @@
+[Unit]
+Description=Radarr Server
+After=syslog.target network.target
+
+[Service]
+User={{ user }}
+Group={{ user }}
+
+Type=simple
+ExecStart=/usr/bin/mono {{ Radarr_user_home }}/bin/Radarr/Radarr.exe --nobrowser
+TimeoutStopSec=20
+KillMode=process
+Restart=on-failure
+
+
+[Install]
+WantedBy=multi-user.target

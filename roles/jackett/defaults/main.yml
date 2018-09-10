@@ -1,0 +1,20 @@
+---
+# defaults file for chrisjohnson00.jacket
+
+jackett_packages: ["mono-devel","libcurl4-openssl-dev","ca-certificates-mono"]
+jackett_version: "v0.10.164" # found on https://github.com/Jackett/Jackett/releases
+jackett_ignore_ssl_errors: "false"
+# ServerConfig.json values
+jackett_port: 9117
+jackett_allow_external: "true"
+jackett_api_key: "upprkomkvn4omsdn3hkjgwrnhbru17qq"
+jackett_admin_password: "null"  #use "null" for no password
+jackett_instance_id: "8pzs6zb1w14dbqq48c5iga76fqih36opbnoymd1ju2gq4eelduu1vnvb3c6oloi2"
+jackett_blackhole_dir: "" #use "" for no blackhole
+jackett_update_disabled: "false"
+jackett_update_prerelease: "false"
+jackett_base_path_override: "" #use "" for no override
+jackett_omdb_api_key: "" #use "" for no key
+# Indexers to load
+jackett_load_indexers: false
+jackett_indexer_path: "" #should end in a /

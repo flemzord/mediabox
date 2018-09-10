@@ -1,0 +1,78 @@
+---
+- name: Ensure the Mono GPG key has been imported
+  apt_key:
+    state: present
+    url: "{{ Radarr_mono_gpg_key }}"
+
+- name: Ensure the Mono APT repository is present
+  apt_repository:
+    repo: 'deb http://download.mono-project.com/repo/debian wheezy main'
+    state: present
+
+- name: Ensure the Mono Xamarin APT repository is present [Ubuntu]
+  apt_repository:
+    repo: 'deb http://download.mono-project.com/repo/debian wheezy-apache24-compat main'
+    state: present
+  when: ansible_distribution == "Ubuntu"
+
+- name: Ensure the Mono Xamarin APT repository is present [Debian]
+  apt_repository:
+    repo: 'deb http://download.mono-project.com/repo/debian wheezy-libjpeg62-compat main'
+    state: present
+  when: ansible_distribution == "Debian"
+
+- name: Ensure mediainfo is installed
+  package: name=mediainfo state=present
+
+- name: Ensure Radarr dependencies are installed
+  package: name={{ Radarr_dependencies }} state=present
+
+- name: Ensure Radarr data/bin directories exists
+  file:
+    dest: "{{ item }}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    state: directory
+  with_items:
+    - "{{ Radarr_data_path }}"
+    - "{{ Radarr_user_home }}/bin"
+    
+- set_fact:
+    Radarr_exe_url : "https://github.com/Radarr/Radarr/releases/download/v0.2.0.1120/Radarr.develop.0.2.0.1120.linux.tar.gz"
+
+- name: Ensure the Radarr is downloaded
+  get_url:
+    url: "{{ Radarr_exe_url }}"
+    dest: "{{ Radarr_data_path }}/Radarr.linux.tar.gz"
+  notify:
+    - Restart Radarr service
+
+- name: Ensure the Radarr tarball has been unpacked
+  unarchive:
+    src: "{{ Radarr_data_path }}/Radarr.linux.tar.gz"
+    dest: "{{ Radarr_user_home }}/bin/"
+    copy: false
+
+- name: Deploy Radarr service manifest
+  template:
+    src: "{{ Radarr_service_file.src }}"
+    dest: "{{ Radarr_service_file.dest }}"
+    owner: root
+    group: root
+    mode: 0600
+  notify:
+    - Reload Radarr service config
+    - Restart Radarr service
+
+- meta: flush_handlers
+
+- name: Change right
+  file:
+    path: "{{ Radarr_user_home }}"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0755
+    recurse: yes
+
+- name: Ensure the Radarr service is running and enabled on boot
+  service: name=radarr state=started enabled=yes

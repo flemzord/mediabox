@@ -1,0 +1,12 @@
+{
+  "Port": {{ jackett_port }},
+  "AllowExternal": {{ jackett_allow_external }},
+  "APIKey": "{{ jackett_api_key }}",
+  "AdminPassword": {% if jackett_admin_password is equalto "null" %}null{% else %}"{{ jackett_admin_password }}"{% endif %},
+  "InstanceId": "{{ jackett_instance_id }}",
+  "BlackholeDir": {% if jackett_blackhole_dir is equalto "null" %}""{% else %}"{{ jackett_blackhole_dir }}"{% endif %},
+  "UpdateDisabled": {{ jackett_update_disabled }},
+  "UpdatePrerelease": {{ jackett_update_prerelease }},
+  "BasePathOverride": {% if jackett_base_path_override is equalto "null" %}""{% else %}"{{ jackett_base_path_override }}"{% endif %},
+  "OmdbApiKey": {% if jackett_omdb_api_key is equalto "null" %}""{% else %}"{{ jackett_omdb_api_key }}"{% endif %}
+}

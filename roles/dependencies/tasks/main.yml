@@ -1,0 +1,11 @@
+---
+- name: "Ensure system is either Debian 9 or Ubuntu 18.04"
+  fail: msg="MediaBox is specifically designed for Debian 9 or Ubuntu 18.04"
+  when: ansible_distribution_major_version is version_compare('9', '!=') and ansible_distribution_version is version_compare('18.04', '!=')
+  
+- include_tasks: inc/user.yml
+- include_tasks: inc/dirs.yml
+- include_tasks: inc/package.yml
+
+- name: Import fuse.conf
+  copy: src=fuse.conf dest=/etc/fuse.conf force=yes

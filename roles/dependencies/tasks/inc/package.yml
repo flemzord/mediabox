@@ -1,0 +1,42 @@
+---
+- name: Install common packages
+  apt: "name={{item}} state=present"
+  with_items:
+    - nano
+    - zip
+    - unzip
+    - p7zip
+    - curl
+    - tree
+    - lsof
+    - man-db
+    - git
+    - rsync
+    - logrotate
+    - htop
+    - iotop
+    - ncdu
+    - dnsutils
+    - screen
+    - jq
+    - lib32z1
+    - fuse
+    - vim
+
+- name: Install unrar
+  apt: "name={{item}} state=present"
+  with_items:
+    - unrar
+  ignore_errors: yes
+
+- name: Check to see if unrar installed
+  stat:
+    path: "/usr/bin/unrar"
+  register: unrar_binary
+
+- name: Install unrar-free if unrar was not installed
+  apt: "name={{item}} state=present"
+  with_items:
+    - unrar-free
+  ignore_errors: yes
+  when: not unrar_binary.stat.exists

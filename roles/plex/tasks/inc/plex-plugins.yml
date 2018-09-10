@@ -1,0 +1,31 @@
+- name: Install package
+  apt:
+    name: "{{ item }}"
+    update_cache: yes
+  with_items:
+    - git
+    - htop
+    - vim
+    - unzip
+- name: "Download plex trakt Scrobbler"
+  get_url:
+    url: https://github.com/trakt/Plex-Trakt-Scrobbler/archive/master.zip
+    dest: /tmp/Plex-Trakt-Scrobbler.zip
+- name: Extract Plex-Trakt-Scrobbler into /tmp
+  unarchive:
+    src: /tmp/Plex-Trakt-Scrobbler.zip
+    dest: /tmp/
+    remote_src: yes
+- name: Install Plex Trakt
+  command: >-
+    cp -r 
+    /tmp/Plex-Trakt-Scrobbler-master/Trakttv.bundle 
+    "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/Plug-ins/"
+- name: "Change owner"
+  file:
+    path: "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/Plug-ins/"
+    recurse: yes
+    owner: plex
+    group: plex
+    mode: 770
+  notify: restart plex

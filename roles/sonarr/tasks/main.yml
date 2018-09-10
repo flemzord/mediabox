@@ -1,0 +1,54 @@
+---
+
+- name: add apt-keys
+  apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: "{{ item }}"
+  with_items:
+    - FDA5DFFC
+    - 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+  become: yes
+
+- name: add mono apt-repo
+  apt_repository:
+    repo: deb http://download.mono-project.com/repo/{{ ansible_distribution | lower }}/ {{ ansible_distribution_release }} main
+    state: present
+  become: yes
+  when: ansible_distribution_release != 'stretch'
+
+- name: add sonarr apt-repo
+  apt_repository:
+    repo: deb http://apt.sonarr.tv/ master main
+    state: present
+  become: yes
+
+- name: install sonarr
+  apt:
+    name: nzbdrone
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+  become: yes
+
+- name: "Change owner"
+  file:
+    path: "{{ sonarr_user_home }}"
+    recurse: yes
+    owner: "{{ user }}"
+    group: "{{ user }}"
+  notify: restart_sonarr
+
+- name: check for systemd
+  command: systemctl --version
+  register: sonarr_systemctl_version
+  ignore_errors: yes
+
+- name: add sonarr.service
+  template:
+    src: sonarr.service.ini
+    dest: /lib/systemd/system/sonarr.service
+    mode: 0644
+  become: yes
+  notify:
+    - sonarr_reload_systemd
+    - restart_sonarr

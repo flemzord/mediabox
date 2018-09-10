@@ -1,0 +1,19 @@
+---
+- hosts: all
+  become: true
+  vars:
+    ci: False
+  vars_files:
+    - vars.yml
+  roles:
+    - dependencies
+    - plexdrive
+    - unionfs
+    - radarr
+    - sonarr
+    - jackett
+    - plex
+    - transmission
+    - traefik
+    - ufw
+    
