@@ -43,6 +43,6 @@
 
 - name: Start rclone service
   systemd: 
-    enabled: yes
+    enabled: no
     name: rclone 
     daemon_reload: yes 
