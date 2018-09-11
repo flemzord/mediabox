@@ -1,0 +1,8 @@
+---
+ci: True
+user: mediabox
+domain: MY_URL.com
+
+plex:
+  user: PLEX_USER
+  pass: PLEX_PASSWORD

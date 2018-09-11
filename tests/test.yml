@@ -4,7 +4,7 @@
   vars:
     ci: False
   vars_files:
-    - vars.yml
+    - vars.test.yml
   roles:
     - dependencies
     - plexdrive

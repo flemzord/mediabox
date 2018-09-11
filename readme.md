@@ -1,4 +1,5 @@
-# MediaBox  
+# MediaBox 
+[![Build Status](https://travis-ci.org/flemzord/mediabox.svg?branch=master)](https://travis-ci.org/flemzord/mediabox) 
 
 ## How to start
 

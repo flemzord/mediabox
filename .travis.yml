@@ -1,5 +1,7 @@
 ---
+sudo: required
 services: docker
+language: python
 
 env:
   - distro: ubuntu1804
@@ -9,13 +11,11 @@ script:
   # Configure test script so we can run extra tests after playbook is run.
   - export container_id=$(date +%s)
   - export cleanup=false
+  - docker --version
 
   # Download test shim.
-  - wget -O ${PWD}/tests/test.sh https://gist.githubusercontent.com/flemzord/5536c26acf615e1c5b433c67ae04aaf1/raw/0d9ce3e52987b5f0fd4da35b37d1cc95512ed096/test.sh
+  - wget -O ${PWD}/tests/test.sh https://gist.githubusercontent.com/flemzord/5536c26acf615e1c5b433c67ae04aaf1/raw/41a4f3f81104f77e952c4771149d264b87ddbee8/test.sh
   - chmod +x ${PWD}/tests/test.sh
 
   # Run tests.
   - ${PWD}/tests/test.sh
-
-  # Test whether Docker is running correctly (Dockerception!).
-  - docker exec --tty ${container_id} docker run hello-world
