@@ -2,6 +2,7 @@
 ci: True
 user: mediabox
 domain: MY_URL.com
+email: mon@email.com
 
 plex:
   user: PLEX_USER

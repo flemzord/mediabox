@@ -2,7 +2,7 @@
 - hosts: all
   become: true
   vars:
-    ci: False
+    ci: True
   vars_files:
     - vars.test.yml
   roles:

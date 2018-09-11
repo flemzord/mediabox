@@ -1,9 +1,15 @@
 # MediaBox 
 [![Build Status](https://travis-ci.org/flemzord/mediabox.svg?branch=master)](https://travis-ci.org/flemzord/mediabox) 
 
+## Requirements
+
+- Python
+- Sudo
+
 ## How to start
 
-MediaBox support only Debian 9, please install your server with debian 9. But it's possible use ubuntu 18.04.
+MediaBox support only Debian 9, please install your server with debian 9. But it's possible use ubuntu 18.04.    
+By default, rclone is install and configure.
 
 0) Clone this repo    
 ```git clone https://github.com/flemzord/mediabox.git```

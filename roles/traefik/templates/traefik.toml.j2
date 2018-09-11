@@ -26,7 +26,7 @@ address = ":443"
 
 # Enable ACME (Let's Encrypt): automatic SSL
 [acme]
-email = "maxence@maireaux.fr"
+email = "{{ email }}"
 storage = "/opt/traefik/acme.json" # or "traefik/acme/account" if using KV store
 entryPoint = "https"
 onDemand = false

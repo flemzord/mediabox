@@ -10,3 +10,4 @@
     - /mnt/download/incomplete
     - /mnt/download/.session
     - /opt/plexdrive
+    - /opt/traefik/
