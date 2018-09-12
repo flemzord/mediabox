@@ -31,5 +31,12 @@ ufw_rules: [
   { port: 22, rule: allow },
   { port: 80, rule: allow },
   { port: 443, rule: allow },
-  { port: 32400, rule: allow }
+  { port: 32400, rule: allow },
+  { port: 1900, rule: allow },
+  { port: 3005, rule: allow },
+  { port: 32410, rule: allow },
+  { port: 32412, rule: allow },
+  { port: 32413, rule: allow },
+  { port: 32414, rule: allow },
+  { port: 32469, rule: allow }
 ]

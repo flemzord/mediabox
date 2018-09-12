@@ -6,15 +6,15 @@
   vars_files:
     - vars.yml
   roles:
-    # - dependencies
-    # - plexdrive
-    # - rclone
-    # - unionfs
-    # - radarr
-    # - sonarr
-    # - jackett
+    - dependencies
+    - plexdrive
+    - rclone
+    - unionfs
+    - radarr
+    - sonarr
+    - jackett
     - plex
-    # - transmission
-    # - traefik
-    # - ufw
+    - transmission
+    - traefik
+    - ufw
     
