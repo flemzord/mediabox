@@ -97,3 +97,6 @@
   file:
     path: /home/{{ user }}/.config/Jackett/ServerConfig-ansible.json
     state: absent
+
+- name: Ensure the jackett service is running and enabled on boot
+  service: name=jackett state=started enabled=yes
